@@ -1,20 +1,13 @@
 from flask import Flask, request, jsonify
-import pyttsx3
-import speech_recognition as sr
+
 from fpdf import FPDF
 import os
 from datetime import datetime
 
+
 app = Flask(__name__, static_folder="static")
 
 
-# Initialize pyttsx3 engine globally
-engine = pyttsx3.init()
-
-def speak(text):
-    """Speak out the given text."""
-    engine.say(text)
-    engine.runAndWait()  # ✅ Correct method
 
 # Global task list
 todo_list = []
@@ -146,53 +139,6 @@ def delete_task():
     todo_list = [t for t in todo_list if t["task"] != task]
 
     return jsonify({"message": f"Task '{task}' deleted successfully!", "tasks": todo_list}), 200
-
-# Route for voice command task addition
-@app.route('/voice-add-task', methods=['GET'])
-def voice_add_task():
-    recognizer = sr.Recognizer()
-    
-    def listen_for_command(prompt):
-        """Speak a prompt and listen for a response."""
-        speak(prompt)
-        with sr.Microphone() as source:
-            recognizer.adjust_for_ambient_noise(source)
-            try:
-                audio = recognizer.listen(source, timeout=5)  # ✅ Prevents infinite waiting
-                return recognizer.recognize_google(audio)
-            except sr.UnknownValueError:
-                return "error: Could not understand the audio"
-            except sr.RequestError:
-                return "error: Speech recognition service error"
-            except sr.WaitTimeoutError:
-                return "error: No response detected"
-
-    # Ask for task details
-    task_name = listen_for_command("Please say the task name.")
-    if "error" in task_name:
-        return jsonify({"error": task_name}), 400
-
-    task_date = listen_for_command("Please say the task date in format, year, month, day.")
-    if "error" in task_date:
-        return jsonify({"error": task_date}), 400
-
-    task_time = listen_for_command("Please say the task time in format, hour, minute.")
-    if "error" in task_time:
-        return jsonify({"error": task_time}), 400
-
-    task_category = listen_for_command("Please say the category. Options: Work, Personal, Urgent, Other.")
-    if task_category not in ["Work", "Personal", "Urgent", "Other"]:
-        task_category = "General"
-
-    # Confirm Task
-    confirm = listen_for_command(f"You said: {task_name}, on {task_date} at {task_time}, under {task_category}. Please confirm by saying yes or no.")
-    
-    if "yes" in confirm.lower():
-        todo_list.append({"task": task_name, "reminder_time": f"{task_date} {task_time}", "category": task_category, "status": "Remaining"})
-        return jsonify({"message": f"Task '{task_name}' added successfully!", "tasks": todo_list}), 201
-    else:
-        return jsonify({"error": "Task addition canceled"}), 400
-
 
 # Run the Flask app
 if __name__ == '__main__':
