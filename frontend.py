@@ -5,7 +5,7 @@ import time
 import streamlit_autorefresh  # ✅ To refresh countdown dynamically
 
 
-BASE_URL = "https://todo-backend.onrender.com"
+BASE_URL = "https://todo-assistant-on2d.onrender.com"
 
 st.set_page_config(layout="wide")
 
