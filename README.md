@@ -1,4 +1,4 @@
-# 📝 AI-Powered To-Do List Assistant  
+# AI-Powered To-Do List Assistant  
 
 A web-based task management assistant that helps users organize tasks, track deadlines, categorize progress, and download task lists as PDFs.  
 
@@ -37,7 +37,7 @@ gtts
 ✔ Auto Refresh – Updates dynamically without manual refresh
 ✔ Smooth UI – User-friendly interface
 
-🔮 Future Enhancements
+Future Enhancements
 🔹 🎤 Voice Assistance (Planned) – Add tasks using speech commands
 🔹 🔑 Google OAuth Authentication (Planned) – Cross-platform user authentication
 🔹 📅 Calendar Integration (Planned) – Sync tasks with Google Calendar
